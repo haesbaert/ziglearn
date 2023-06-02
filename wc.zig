@@ -48,8 +48,7 @@ fn doit(filename: [:0]const u8) !void {
             total_line_count += line_count;
             total_word_count += word_count;
             total_byte_count += byte_count;
-        } else
-            return err;
+        } else return err;
     }
 }
 
@@ -76,8 +75,7 @@ pub fn main() !void {
                     else => {},
                 }
             }
-        } else
-            try files.append(a);
+        } else try files.append(a);
     }
 
     if (!print_lines and !print_words and !print_bytes) {
@@ -86,9 +84,13 @@ pub fn main() !void {
         print_bytes = true;
     }
     if (files.items.len == 0)
-        doit("") catch |err| { warn("{!}\n", .{err}); };
+        doit("") catch |err| {
+            warn("{!}\n", .{err});
+        };
     for (files.items) |file|
-        doit(file) catch |err| { warn("{s}: {!}\n", .{file, err}); };
+        doit(file) catch |err| {
+            warn("{s}: {!}\n", .{ file, err });
+        };
     if (files.items.len > 1)
         try printit(total_line_count, total_word_count, total_byte_count, "total");
 }
